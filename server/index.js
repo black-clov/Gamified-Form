@@ -132,7 +132,7 @@ app.post('/submitForm', (req, res) => {
             from: 'opening@itech-club.com', // sender address
             to: email, // list of receivers
             subject: 'Welcome to the Team', // Subject line
-            text: `Hello ${fullName}, thanks for filling up the form. You are in the team ${teamColor}.` // plain text body
+            text: `Hello ${fullName}, thanks for filling up the form. You are in team ${teamColor}.` // plain text body
         };
 
         // send mail with defined transport object
