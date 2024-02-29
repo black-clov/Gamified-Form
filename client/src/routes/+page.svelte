@@ -163,7 +163,7 @@
 				</select>
 					
 
-				<button type="submit" class="btn variant-filled-primary" on:click={join}>Join Now</button>
+				<button type="submit" class="btn variant-filled-primary">Join Now</button>
 			</form>
 			{/if}
 				
