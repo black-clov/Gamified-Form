@@ -3,8 +3,8 @@
 	import axios from 'axios';
 
 
-	let apiUrl = import.meta.env.API_URL;
 	let formSwitch:boolean=false;
+	let thanksSwitch:boolean=false;
 
 	const iconsMap = new Map();
 	iconsMap.set("Water", "https://img.icons8.com/ios/50/000000/water-element.png");
@@ -12,8 +12,9 @@
 	iconsMap.set("Earth", "https://img.icons8.com/ios/50/000000/earth-element.png");
 	iconsMap.set("Air", "https://img.icons8.com/ios/50/000000/air-element.png");
 
-	let name:string;
+	let fullName:string;
 	let email:string;
+	let filiere:string;	
 
 	const teamArray = ["Water", "Fire", "Earth", "Air"];
 	let team:string
@@ -22,7 +23,8 @@
 	const getRandomTeam = () => {
 		team = teamArray[Math.floor(Math.random() * teamArray.length)];
 	};
-	getRandomTeam()
+
+	let joinPromise:Promise<void>
 	
 	function setTheme(t:string) {
 		switch (t) {
@@ -42,39 +44,18 @@
 				theme = "wintry";
 		}	
 	}
-	setTheme(team)
-	// async function checkUser() {
-	// 	let session= document.cookie.split("user")[1].split(";")[0];
-	// 	if (session) {
-	// 		const res = await axios.post(apiUrl+"/checksession", {session});
-	// 		if (res.status === 200) {
-	// 			team = res.data.team;
-	// 			setTheme(team);
-	// 		}
-	// 	}else{
-	// 		team = teamArray[Math.floor(Math.random() * teamArray.length)];
-	// 		setTheme(team);
-	// 	}
-		
-	// 	if (document.cookie.split("team=").length > 1) {
-	// 		document.cookie = "team=" + team;
-	// 		setTheme(team);
-	// 	} else {
-	// 		team = document.cookie.split("team")[1].split(";")[0];
-	// 		setTheme(team);
-	// 	}
-	// }
 
 	async function join() {
-		// const res = await axios.post(apiUrl+"/join", {team});
-		// if (res.status === 200) {
-		// 	document.cookie = "user=" + res.data.session;
-		// 	document.cookie = "team=" + team;
-		// 	setTheme(team);
-		// }
+		if(!fullName || !email || !filiere) return
+		const res = await axios.post("http://localhost:8000/join", {fullName, email, filiere, team});
+		if (res.status === 200) {
+			thanksSwitch = true;
+		} else {
+			alert(res.data.message);
+		}
 	}
 
-	let randomIcon:string
+	let randomIcon:string = "https://img.icons8.com/ios/50/000000/launched-rocket.png"
 	async function iconRandomizer() {
 		for (let i = 0; i < 30; i++) {
 			const thisTeam = teamArray[Math.floor(Math.random() * teamArray.length)];
@@ -84,18 +65,24 @@
 			randomIcon = iconsMap.get(thisTeam);
 		}
 		await new Promise(r => setTimeout(r, 600));
-		randomIcon = ""
-		
+		randomIcon = ""	
 	}
+
+	async function setCookies() {
+		document.cookie = "team=" + team + ";";
+	}	
 	
 	
 	onMount(async () => {
-		iconRandomizer()
-
-
+		if (document.cookie.includes("team")) {
+			team = document.cookie.split("team=")[1].split(";")[0];
+			randomIcon=""
+			setTheme(team)
+		} else {
+			await iconRandomizer()
+			await setCookies()
+		}
 	})
-	
-
 
 </script>
 
@@ -121,25 +108,66 @@
 		flex-direction: column;
 		gap: 1rem;
 	}
+	.teamDistributer .teamText {
+		flex-direction: row;
+	}
+	.formlogo {
+		width: 7rem;
+		height: auto;
+		margin-bottom: 2rem;
+		/* position: absolute;
+		width: 6rem;
+		margin-bottom: 2rem;
+		bottom: 0; */
+	}
 </style>
 
 <body data-theme={theme}>
 <div class="teamDistributer">
-	{#if randomIcon != ""}
+	{#if randomIcon != "" && randomIcon != undefined}
+			
 			<div class="rotating icons">
 				<img src={randomIcon} alt="{randomIcon} icon" />
 			</div>
 	{:else}
-		<h1>You are team {team}</h1>
-		{#if formSwitch == false}
-			<button  type="button" class="btn variant-filled-primary" on:click={()=>{formSwitch=true}}>Join Now</button>
+		<img class="formlogo" src="logo.png" alt="iTech logo">
+		<h1 class="teamText">You are team {@html team?team:'<div class="placeholder animate-pulse flex-0" />'}</h1>
+		{#if thanksSwitch}
+			<h2>Thank you for joining!</h2>
 		{:else}
-		<form on:submit|preventDefault={join}>
-			<input class="input" type="text" bind:value={name} placeholder="Your name" >
-			<input class="input" type="email" bind:value={email} placeholder="your@email.com">
+			{#await joinPromise}
+			<section class="card w-full animate-pulse">
+				<div class="p-3 space-y-3">
+					<div class="placeholder-circle" />
+					<div class="placeholder-circle" />
+					<div class="placeholder-circle" />
+				</div>
+			</section>
+			{:then response}
+			{#if formSwitch == false}
+				<button  type="button" class="btn variant-filled-primary" on:click={()=>{formSwitch=true}}>Join Now</button>
+			{:else}
+			<form on:submit|preventDefault={async ()=> joinPromise = join()}>
+				<input class="input" type="text" required bind:value={fullName} placeholder="Your name" >
+				<input class="input" type="email" required bind:value={email} placeholder="your@email.com">
+				
+				<select class="select" size="3" required bind:value={filiere}>
+					<option value="1">Master IT</option>
+					<option value="2">Master IDMS</option>
+					<option value="3">Génie Info</option>
+					<option value="4">Génie Mecanique</option>
+					<option value="6">Génie Electrique</option>
+					<option value="7">Génie Industrielle</option>
+					<option value="8">Tronc Commun</option>
+					<option value="9">Master BD</option>
+				</select>
+					
 
-			<button type="submit" class="btn variant-filled-primary">Join Now</button>
-		</form>
+				<button type="submit" class="btn variant-filled-primary" on:click={join}>Join Now</button>
+			</form>
+			{/if}
+				
+			{/await}
 		{/if}
 	{/if}
 	
