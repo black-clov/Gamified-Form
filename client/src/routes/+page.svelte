@@ -47,7 +47,7 @@
 
 	async function join() {
 		if(!fullName || !email || !filiere) return
-		const res = await axios.post("http://localhost:8000/join", {fullName, email, filiere, team});
+		const res = await axios.post("http://api.itech-club.com/join", {fullName, email, filiere, team});
 		if (res.status === 200) {
 			thanksSwitch = true;
 		} else {
