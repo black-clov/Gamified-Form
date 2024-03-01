@@ -120,6 +120,14 @@
 		margin-bottom: 2rem;
 		bottom: 0; */
 	}
+	.loading {
+		display: flex;
+		flex-direction: row;
+		gap: 1rem;
+		justify-content: center;
+		align-items: center;
+		box-shadow: 0 0 0.5rem 0.25rem rgba(0, 0, 0, 0.1);
+	}
 </style>
 
 <body data-theme={theme}>
@@ -134,13 +142,14 @@
 		<h1 class="teamText">You are team {@html team?team:'<div class="placeholder animate-pulse flex-0" />'}</h1>
 		{#if thanksSwitch}
 			<h2>Thank you for joining!</h2>
+			<p>An email was sent to your inbox. Please check your spam folder if you don't see it.</p>
 		{:else}
 			{#await joinPromise}
-			<section class="card w-full animate-pulse">
-				<div class="p-3 space-y-3">
-					<div class="placeholder-circle" />
-					<div class="placeholder-circle" />
-					<div class="placeholder-circle" />
+			<section class="card w-50 animate-pulse">
+				<div class="loading p-3 ">
+					<div class="placeholder-circle w-4 h-4" />
+					<div class="placeholder-circle w-4 h-4" />
+					<div class="placeholder-circle w-4 h-4" />
 				</div>
 			</section>
 			{:then response}
