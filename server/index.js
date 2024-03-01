@@ -2,6 +2,10 @@ import {app} from './express.app.js';
 import conn from './db.js';
 import {sendWelcomeEmail} from './emailing.js';
 
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
+
 app.post('/join', async (req, res) => {
   console.log('Join Called ...');
   const { fullName, email, filiere, team} = req.body;
