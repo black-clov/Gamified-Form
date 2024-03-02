@@ -9,6 +9,13 @@ app.get('/', (req, res) => {
 app.post('/join', async (req, res) => {
   console.log('Join Called ...');
   const { fullName, email, filiere, team} = req.body;
+  
+  const checkEmail = await conn.promise().query('SELECT * FROM users WHERE email = "' + email+'"');
+  if (checkEmail[0].length > 0) {
+    console.log('Join finished: Email already exists ❌');
+    return res.status(402).send('Email already exists');
+  }
+
   if (!fullName || !email || !filiere || !team) {
     return res.status(400).send('Full Name and Email are required.');
   }
@@ -16,7 +23,7 @@ app.post('/join', async (req, res) => {
   const sql = 'INSERT INTO users SET ?';
   try {
     await conn.promise().query(sql, newUser);
-    await sendWelcomeEmail(fullName, email, team);
+    //await sendWelcomeEmail(fullName, email, team);
     res.status(200).send('User Created');
     console.log('Join Finished ✅');
   } catch (error) {
