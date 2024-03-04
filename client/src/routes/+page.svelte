@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {onMount, afterUpdate, beforeUpdate} from 'svelte';
+	import {onMount} from 'svelte';
 	import axios from 'axios';
 
 
@@ -46,7 +46,7 @@
 				theme = "wintry";
 		}	
 	}
-
+	let seconds = 5;
 	async function join() {
 		if(!fullName || !email || !filiere) return
 		if(filiere === "0") return alert("Please select your major");
@@ -56,7 +56,14 @@
 			if (res.status === 200) {
 				thanksSwitch = true;
 				localStorage.setItem("joined", "true");
-				new Promise(r => setTimeout(r, 5000)).then(() => window.location.replace("https://chat.whatsapp.com/GVfvRuq9AIpJema4dMgPCT"));
+				for (let i = 0; i < 5; i++) {
+					await new Promise(r => setTimeout(r, 1000));
+					seconds--;
+					if (seconds === 0) {
+						window.location.replace("https://chat.whatsapp.com/GVfvRuq9AIpJema4dMgPCT");
+					}
+				}
+				//new Promise(r => setTimeout(r, 5000)).then(() => window.location.replace("https://chat.whatsapp.com/GVfvRuq9AIpJema4dMgPCT"));
 			}
 		} catch (error) {
 			if (error.response.status === 402) {
@@ -86,8 +93,10 @@
 	}
 
 	async function setCookies() {
-		document.cookie = "team=" + team + ";";
-	}	
+		document.cookie = "team=" + team + "; max-age=31536000;";
+	}
+	
+	
 	
 	
 	onMount(async () => {
@@ -174,7 +183,7 @@
 				{#if !joinedSwitch}
 					<p class="pforsuccess" style="text-align: center;">An email was sent to your inbox. Please check your spam folder if you don't see it.</p>
 					<br>
-					<p class="pforsuccess" style="text-align: center;">You will be redirected to our whatsapp channel in 5 seconds.</p>
+					<p class="pforsuccess" style="text-align: center;">You will be redirected to our whatsapp channel in {seconds} seconds.</p>
 				{:else}
 					<p class="pforsuccess" style="text-align: center;">You are already a member of our community.</p>
 				{/if}
@@ -205,11 +214,12 @@
 					<option value="1">Master IT</option>
 					<option value="2">Master IDMS</option>
 					<option value="9">Master BD</option>
-					<option value="3">Génie Info</option>
-					<option value="4" selected>Génie Mecanique</option>
-					<option value="6">Génie Electrique</option>
-					<option value="7">Génie Industrielle</option>
-					<option value="8">Tronc Commun</option>
+					<option value="3">Génie IAGI</option>
+					<option value="4">Génie MI</option>
+					<option value="6">Génie MSEI</option>
+					<option value="7">Genie Industriel</option>
+					<option value="10">Génie EM</option>
+					<option value="8">Cycle préparatoire</option>
 				</select>
 					
 
