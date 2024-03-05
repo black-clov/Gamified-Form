@@ -1,12 +1,13 @@
 <script>
     import { onMount } from 'svelte';
     import axios from 'axios';
+    import confetti from 'canvas-confetti';
 
     let drawSwitch = false;
     let buttonSwitch = false;
     let winnerPromise;
 
-    let theme="wintry";
+    let theme="sahara";
 
     function setTheme(t) {
 		switch (t) {
@@ -40,13 +41,53 @@
 
     async function randomizer() {
         buttonSwitch = true;
-        for (let i=0; i<10/*studentList.length*/; i++) {
+        const randomAudio = new Audio("randomSound.wav");
+        randomAudio.loop = true;
+        randomAudio.play();
+        for (let i=0; i<studentList.length; i++) {
             randomStudent = studentList[Math.floor(Math.random() * studentList.length)];
             setTheme(randomStudent.team);
             await new Promise(r => setTimeout(r, 200));
-        }
+        }randomAudio.pause();
+        const winnerAudio = new Audio("winningSound.wav");
+        winnerAudio.play();
         finalWinner = randomStudent;
         drawSwitch = true;
+        await new Promise(r => setTimeout(r, 300));
+        const cheerAudio = new Audio("cheer.mp3");
+        cheerAudio.play();
+        
+        confetti({
+            particleCount: 500,
+            spread: 360,
+            ticks: 10000,
+            gravity: 0.0,
+            origin: { y: 0.6 },
+            zIndex: 1,
+            
+        });
+        const confittiShape = confetti.shapeFromText({text:"🤖",scalar:3});
+        confetti({
+            particleCount: 50,
+            spread: 120,
+            angle:0,
+            shapes: [confittiShape],
+            origin: { y: 0.6 },
+            scalar: 3,
+            zIndex: 3,
+            flat: true
+        });
+        confetti({
+            particleCount: 50,
+            spread: 120,
+            angle:180,
+            shapes: [confittiShape],
+            origin: { y: 0.6 },
+            scalar: 3,
+            zIndex: 3,
+            flat: true
+        });
+
     }
 
     onMount(async () => {
@@ -91,14 +132,6 @@
         text-align: center;
         line-height: normal;
     }
-    .confittyAnimation{
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-    }
     .winnerName {
         font-size: 5rem;
         text-align: center;
@@ -112,7 +145,7 @@
         <h1 class="h1">Winner Draw</h1>
         {#if drawSwitch}
             <div class="winnerCard card card-hover">
-                <h2>the winner from the ramdom draw is:</h2>
+                <h2>the winner from the random draw is:</h2>
                 <h1 class="winnerName">
                     {finalWinner.fullName}
                 </h1>
@@ -120,11 +153,10 @@
                     {filiereArray[finalWinner.filiere]}
                 </h3>
             </div>
-            <div class="confittyAnimation"></div>   
         {:else}
             {#if buttonSwitch}
-                <h3>{randomStudent.fullName}</h3>
-                <h2>{filiereArray[randomStudent.filiere]}</h2>
+                <h3 class="h3">{randomStudent.fullName}</h3>
+                <h4 class="h4">{filiereArray[randomStudent.filiere]}</h4>
             {:else}
                 <button class="btn variant-filled-primary w-32" on:click={randomizer}>Draw</button>
             {/if}

@@ -33,7 +33,7 @@ app.post('/join', async (req, res) => {
 });
 
 app.get('/list', (req, res) => {
-  conn.query('SELECT * FROM users', (err, result) => {
+  conn.query('SELECT * FROM `users` WHERE filiere != "1"', (err, result) => {
     if (err) throw err;
     res.send(result);
   });
