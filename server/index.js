@@ -31,3 +31,17 @@ app.post('/join', async (req, res) => {
     res.status(500).send('An error occured');
   }
 });
+
+app.get('/list', (req, res) => {
+  conn.query('SELECT * FROM users', (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+app.get('/random', (req, res) => {
+  conn.query('SELECT * FROM users ORDER BY RAND() LIMIT 1', (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});

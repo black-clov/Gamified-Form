@@ -18,7 +18,7 @@
 	let email:string;
 	let filiere:string;	
 
-	const teamArray = ["Water", "Fire", "Earth", "Air"];
+	const teamArray = ["Water", /*"Fire"*/"Air", "Earth", "Air"];
 	let team:string
 	let theme:string
 
@@ -205,26 +205,26 @@
 					<button  type="button" class="btn variant-filled-primary" on:click={()=>{formSwitch=true}}>Join Now</button>
 				{/if}
 			{:else}
-			<form on:submit|preventDefault={join}>
-				<input class="input" type="text" required bind:value={fullName} placeholder="Your name" >
-				<input class="input" type="email" required bind:value={email} placeholder="your@email.com">
-				
-				<select class="select" required bind:value={filiere}>
-					<option value="0" disabled selected>Select your Major</option>
-					<option value="1">Master IT</option>
-					<option value="2">Master IDMS</option>
-					<option value="9">Master BD</option>
-					<option value="3">Génie IAGI</option>
-					<option value="4">Génie MI</option>
-					<option value="6">Génie MSEI</option>
-					<option value="7">Genie Industriel</option>
-					<option value="10">Génie EM</option>
-					<option value="8">Cycle préparatoire</option>
-				</select>
+				<form on:submit|preventDefault={join}>
+					<input class="input" type="text" required bind:value={fullName} placeholder="Your name" >
+					<input class="input" type="email" required bind:value={email} placeholder="your@email.com">
 					
+					<select class="select" required bind:value={filiere}>
+						<option value="0" disabled selected>Select your Major</option>
+						<option value="1">Master IT</option>
+						<option value="2">Master IDMS</option>
+						<option value="9">Master BD</option>
+						<option value="3">Génie IAGI</option>
+						<option value="4">Génie MI</option>
+						<option value="6">Génie MSEI</option>
+						<option value="7">Genie Industriel</option>
+						<option value="10">Génie EM</option>
+						<option value="8">Cycle préparatoire</option>
+					</select>
+						
 
-				<button type="submit" class="btn variant-filled-primary">Join Now</button>
-			</form>
+					<button type="submit" class="btn variant-filled-primary">Join Now</button>
+				</form>
 			{/if}
 				
 			{/await}
