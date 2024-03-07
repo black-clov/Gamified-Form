@@ -81,9 +81,9 @@
 
 	let randomIcon:string = "https://img.icons8.com/ios/50/000000/launched-rocket.png"
 	async function iconRandomizer() {
-		for (let i = 0; i < 30; i++) {
+		for (let i = 0; i < 100; i++) {
 			const thisTeam = teamArray[Math.floor(Math.random() * teamArray.length)];
-			await new Promise(r => setTimeout(r, 100));
+			await new Promise(r => setTimeout(r, 65));
 			team = thisTeam
 			setTheme(thisTeam)
 			randomIcon = iconsMap.get(thisTeam);

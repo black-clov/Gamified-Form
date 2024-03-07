@@ -1,6 +1,6 @@
 import {app} from './express.app.js';
 import conn from './db.js';
-import {sendWelcomeEmail} from './emailing.js';
+import {sendReminderEmail} from './emailing.js';
 
 app.get('/', (req, res) => {
   res.send('Hello World');
@@ -32,16 +32,22 @@ app.post('/join', async (req, res) => {
   }
 });
 
-app.get('/list', (req, res) => {
+app.get('/draw', (req, res) => {
   conn.query('SELECT * FROM `users` WHERE filiere != "1"', (err, result) => {
     if (err) throw err;
     res.send(result);
   });
 });
 
-app.get('/random', (req, res) => {
-  conn.query('SELECT * FROM users ORDER BY RAND() LIMIT 1', (err, result) => {
+app.get('/list', (req, res) => {
+  conn.query('SELECT * FROM `users`', (err, result) => {
     if (err) throw err;
     res.send(result);
   });
+});
+
+app.post("/send", async (req, res) => {
+  const { fullName, email, team } = req.body;
+  await sendReminderEmail(fullName, email, team);
+  res.send("Email sent!");
 });

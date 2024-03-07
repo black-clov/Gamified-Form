@@ -34,7 +34,7 @@
     let studentList = [];
 
     async function getCandidates() {
-        const response = await axios.get('http://localhost:8000/list');
+        const response = await axios.get('http://localhost:8000/draw');
         studentList = response.data;
         console.log(studentList);
     }
@@ -55,6 +55,7 @@
         drawSwitch = true;
         await new Promise(r => setTimeout(r, 300));
         const cheerAudio = new Audio("cheer.mp3");
+        cheerAudio.loop = true;
         cheerAudio.play();
         
         confetti({
