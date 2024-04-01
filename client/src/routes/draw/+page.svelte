@@ -34,7 +34,7 @@
     let studentList = [];
 
     async function getCandidates() {
-        const response = await axios.get('http://localhost:8000/draw');
+        const response = await axios.get('https://api.itech-club.com/draw');
         studentList = response.data;
         console.log(studentList);
     }
@@ -44,7 +44,7 @@
         const randomAudio = new Audio("randomSound.wav");
         randomAudio.loop = true;
         randomAudio.play();
-        for (let i=0; i<studentList.length; i++) {
+        for (let i=0; i<20; i++) {
             randomStudent = studentList[Math.floor(Math.random() * studentList.length)];
             setTheme(randomStudent.team);
             await new Promise(r => setTimeout(r, 200));

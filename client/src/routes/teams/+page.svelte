@@ -5,7 +5,7 @@
 
     let buttomSwitch = false;
 
-    let firstTeam = "Earth";
+    let firstTeam = "Water";
     let SecondTeam = "Fire";
 
     const colorMap = new Map()
@@ -58,7 +58,7 @@
     }
 
     onMount(async () => {
-        const response = await axios.get('http://localhost:8000/list');
+        const response = await axios.get('https://api.itech-club.com/list');
         studentList = response.data;
     });
 </script>

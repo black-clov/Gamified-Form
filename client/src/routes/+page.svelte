@@ -18,9 +18,9 @@
 	let email:string;
 	let filiere:string;	
 
-	const teamArray = ["Water", /*"Fire"*/"Air", "Earth", "Air"];
+	const teamArray = ["Water", "Fire", "Earth", "Air"];
 	let team:string
-	let theme:string
+	let theme:string="crimson";
 
 	const getRandomTeam = () => {
 		team = teamArray[Math.floor(Math.random() * teamArray.length)];
@@ -163,6 +163,20 @@
 		margin-left: 2rem;
 		margin-right: 2rem;
 	}
+	.socialIcons {
+		display: flex;
+		flex-direction: row;
+		gap: 2rem;
+		justify-content: center;
+		align-items: center;
+	}
+	.btn-icon {
+		background-color: #fff;
+		border: 1px solid #000;
+		border-radius: 50%;
+		padding: 0.5rem;
+		margin-top: 2rem;
+	}
 </style>
 
 <body data-theme={theme}>
@@ -229,6 +243,16 @@
 				
 			{/await}
 		{/if}
+		<!-- <h3 class="h1" style="margin-bottom:2rem;">The event is over!</h3>
+		<p class="pforsuccess" style="text-align: center;">We were happy to see you. And we will surely do it again!!!</p>
+		<br>
+		<p class="pforsuccess" style="text-align: center;">We welcome you this Friday the 8th and throught the whole following week, from 12h00 to 13h00, in our stand if you want to join our club</p>
+		<br>
+		<p class="pforsuccess" style="text-align: center;">For more information, Feel free to join the open community of itech Club via these Social links</p>
+		<div class="socialIcons">
+			<button type="button" class="btn-icon variant-filled "><a href="https://www.instagram.com/itech__club/"><img src="https://img.icons8.com/ios/50/000000/instagram-new.png" alt="instagram" /></a></button>
+			<button type="button" class="btn-icon variant-filled"><a href="https://chat.whatsapp.com/GVfvRuq9AIpJema4dMgPCT"><img src="https://img.icons8.com/ios/50/000000/whatsapp.png" alt="whatsapp" /></a></button>
+		</div> -->
 	{/if}
 	
 </div>
