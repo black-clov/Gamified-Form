@@ -9,12 +9,7 @@ const conn = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
-    ssl: {
-        key: fs.readFileSync(process.env.DB_SSL_KEY),
-        cert: fs.readFileSync(process.env.DB_SSL_CERT),
-        ca: fs.readFileSync(process.env.DB_SSL_CA),
-    },
+    port: process.env.DB_PORT
 }, console.log("Connected to database"));
 
 export default conn;
