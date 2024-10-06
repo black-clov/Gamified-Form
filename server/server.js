@@ -214,45 +214,115 @@ app.get('/join',(req,res) => {
 })
 
 
-// Route to handle form submission
 app.post('/submitForm', (req, res) => {
-    const { fullName, email, filiere, team } = req.body;
+  const { fullName, email, filiere } = req.body;
 
-    if (!fullName || !email) {
-        return res.status(400).send('Full Name and Email are required.');
+  if (!fullName || !email) {
+    return res.status(400).send('Full Name and Email are required.');
+  }
+
+  // Start the transaction
+  db.beginTransaction(err => {
+    if (err) {
+      console.error('Transaction error:', err);
+      return res.status(500).send('Transaction error.');
     }
 
-    const newUser = { fullName, email, filiere, team};
-    const sql = 'INSERT INTO users SET ?';
+    // Step 1: Get already assigned team numbers from the database
+    const sqlAssignedTeams = 'SELECT team FROM users FOR UPDATE'; // FOR UPDATE locks rows to avoid race condition
+    db.query(sqlAssignedTeams, (err, result) => {
+      if (err) {
+        console.error('Error retrieving teams from the database:', err);
+        return db.rollback(() => {
+          res.status(500).send('Error retrieving teams from the database.');
+        });
+      }
 
-    db.query(sql, newUser, (err, result) => {
+      // Step 2: Extract already used team numbers
+      const assignedTeams = result.map(user => user.team.toString());
+      const allTeams = Array.from({ length: 100 }, (_, i) => (i + 1).toString());
+
+      // Step 3: Filter out already assigned team numbers
+      const availableTeams = allTeams.filter(team => !assignedTeams.includes(team));
+
+      if (availableTeams.length === 0) {
+        return db.rollback(() => {
+          res.status(500).send('No available teams left.');
+        });
+      }
+
+      // Step 4: Randomly assign a team from available ones
+      const randomTeam = availableTeams[Math.floor(Math.random() * availableTeams.length)];
+
+      // Step 5: Insert the new user with the assigned team
+      const newUser = { fullName, email, filiere, team: randomTeam };
+      const sqlInsertUser = 'INSERT INTO users SET ?';
+
+      db.query(sqlInsertUser, newUser, (err, result) => {
         if (err) {
-            console.error('Error saving user to the database:', err);
-            return res.status(500).send('Error saving user to the database.');
+          if (err.code === 'ER_DUP_ENTRY') {
+            // Duplicate team number error, handle it here
+            console.error('Duplicate team number error:', err);
+            return db.rollback(() => {
+              res.send(`
+                <h1>Oops, this team number is already taken. Please try again.</h1>
+                <form action="/retry" method="POST">
+                  <button type="submit">Start Over</button>
+                </form>
+              `);
+            });
+          }
+
+          console.error('Error saving user to the database:', err);
+          return db.rollback(() => {
+            res.status(500).send('Error saving user to the database.');
+          });
         }
-        console.log('User added to the database.');
 
-        // Send email to the user
-        let mailOptions = {
-            from: 'opening@itech-club.com', // sender address
-            to: email, // list of receivers
-            subject: 'Welcome to the Team', // Subject line
-            text: `Hello ${fullName}, thanks for filling up the form. Your  ${team}.` // plain text body
-        };
+        // Commit the transaction to make sure the insert is done
+        db.commit(err => {
+          if (err) {
+            console.error('Transaction commit error:', err);
+            return db.rollback(() => {
+              res.status(500).send('Transaction commit error.');
+            });
+          }
 
-        // send mail with defined transport object
-        // transporter.sendMail(mailOptions, (error, info) => {
-        //     if (error) {
-        //         console.error('Error sending email:', error);
-        //     } else {
-        //         console.log('Email sent:', info.response);
-        //     }
-        // });
+          console.log(`User ${fullName} added to the database with team number: ${randomTeam}`);
 
-        res.status(200).send('User added to the database and email sent.');
+          // Step 6: Display console message for remaining available teams
+          console.log(`The following teams are now taken: [${assignedTeams.join(', ')}]`);
+          console.log(`The next user will get a random team from these available numbers: [${availableTeams.filter(team => team !== randomTeam).join(', ')}]`);
+
+          // Send email to the user
+          let mailOptions = {
+            from: 'opening@itech-club.com',
+            to: email,
+            subject: 'Welcome to the Team',
+            text: `Hello ${fullName}, thanks for filling up the form. Your assigned team number is ${randomTeam}.`
+          };
+
+          // Uncomment to send the email
+          // transporter.sendMail(mailOptions, (error, info) => {
+          //     if (error) {
+          //         console.error('Error sending email:', error);
+          //     } else {
+          //         console.log('Email sent:', info.response);
+          //     }
+          // });
+
+          res.status(200).send(`User added to the database with team ${randomTeam}.`);
+        });
+      });
     });
+  });
 });
 
+// Route to handle retry (start over)
+app.post('/retry', (req, res) => {
+  res.clearCookie('team');
+  res.redirect('/');
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

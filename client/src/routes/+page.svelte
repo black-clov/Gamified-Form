@@ -1,14 +1,45 @@
 <script lang="ts">
-	import {onMount} from 'svelte';
+    
+	import { onMount } from 'svelte';
 	import axios from 'axios';
+    import AudioPlayer from './audio.svelte'; 
+
+	let formSwitch: boolean = false;
+	let thanksSwitch: boolean = false;
+	let joinedSwitch: boolean = false;
+	let emailExists: boolean = false;
 
 
-	let formSwitch:boolean=false;
-	let thanksSwitch:boolean=false;
-	let joinedSwitch:boolean=false;
-	let emailExists:boolean=false;
+    // Create a reference for the audio element
+    let audioElement: HTMLAudioElement;
 
-	    const iconsMap = new Map();
+    // Audio file path
+    const audioSrc = '/client/src/routes/itechv.mp3'; // Ensure this path is correct
+
+    // Function to play audio
+    function playAudio() {
+        if (audioElement) {
+            audioElement.play().catch((error) => {
+                console.error("Error playing audio:", error);
+            });
+        }
+    }
+
+    // Function to stop audio
+    function stopAudio() {
+        if (audioElement) {
+            audioElement.pause();
+            audioElement.currentTime = 0; // Reset to start
+        }
+    }
+
+    // Optional: Play audio on mount or based on certain conditions
+    onMount(() => {
+        // Example: Play audio when the component mounts
+        playAudio();
+    });
+
+	 const iconsMap = new Map();
 	        iconsMap.set("1", "https://img.icons8.com/ios/50/ffffff/1.png");
 			iconsMap.set("2", "https://img.icons8.com/ios/50/ffffff/2.png");
 			iconsMap.set("3", "https://img.icons8.com/ios/50/ffffff/3.png");
@@ -109,13 +140,113 @@
 			iconsMap.set("98", "https://img.icons8.com/ios/50/ffffff/98.png");
 			iconsMap.set("99", "https://img.icons8.com/ios/50/ffffff/99.png");
 			iconsMap.set("100", "https://img.icons8.com/ios/50/ffffff/100.png");
+            iconsMap.set("101", "https://img.icons8.com/ios-filled/50/ffffff/1.png");
+            iconsMap.set("102", "https://img.icons8.com/ios-filled/50/ffffff/2.png");
+            iconsMap.set("103", "https://img.icons8.com/ios-filled/50/ffffff/3.png");
+            iconsMap.set("104", "https://img.icons8.com/ios-filled/50/ffffff/4.png");
+            iconsMap.set("105", "https://img.icons8.com/ios-filled/50/ffffff/5.png");
+            iconsMap.set("106", "https://img.icons8.com/ios-filled/50/ffffff/6.png");
+            iconsMap.set("107", "https://img.icons8.com/ios-filled/50/ffffff/7.png");
+            iconsMap.set("108", "https://img.icons8.com/ios-filled/50/ffffff/8.png");
+            iconsMap.set("109", "https://img.icons8.com/ios-filled/50/ffffff/9.png");
+            iconsMap.set("110", "https://img.icons8.com/ios-filled/50/ffffff/10.png");
+            iconsMap.set("111", "https://img.icons8.com/ios-filled/50/ffffff/11.png");
+            iconsMap.set("112", "https://img.icons8.com/ios-filled/50/ffffff/12.png");
+            iconsMap.set("113", "https://img.icons8.com/ios-filled/50/ffffff/13.png");
+            iconsMap.set("114", "https://img.icons8.com/ios-filled/50/ffffff/14.png");
+            iconsMap.set("115", "https://img.icons8.com/ios-filled/50/ffffff/15.png");
+            iconsMap.set("116", "https://img.icons8.com/ios-filled/50/ffffff/16.png");
+            iconsMap.set("117", "https://img.icons8.com/ios-filled/50/ffffff/17.png");
+            iconsMap.set("118", "https://img.icons8.com/ios-filled/50/ffffff/18.png");
+            iconsMap.set("119", "https://img.icons8.com/ios-filled/50/ffffff/19.png");
+            iconsMap.set("120", "https://img.icons8.com/ios-filled/50/ffffff/20.png");
+            iconsMap.set("121", "https://img.icons8.com/ios-filled/50/ffffff/21.png");
+            iconsMap.set("122", "https://img.icons8.com/ios-filled/50/ffffff/22.png");
+            iconsMap.set("123", "https://img.icons8.com/ios-filled/50/ffffff/23.png");
+            iconsMap.set("124", "https://img.icons8.com/ios-filled/50/ffffff/24.png");
+            iconsMap.set("125", "https://img.icons8.com/ios-filled/50/ffffff/25.png");
+            iconsMap.set("126", "https://img.icons8.com/ios-filled/50/ffffff/26.png");
+            iconsMap.set("127", "https://img.icons8.com/ios-filled/50/ffffff/27.png");
+            iconsMap.set("128", "https://img.icons8.com/ios-filled/50/ffffff/28.png");
+            iconsMap.set("129", "https://img.icons8.com/ios-filled/50/ffffff/29.png");
+            iconsMap.set("130", "https://img.icons8.com/ios-filled/50/ffffff/30.png");
+            iconsMap.set("131", "https://img.icons8.com/ios-filled/50/ffffff/31.png");
+            iconsMap.set("132", "https://img.icons8.com/ios-filled/50/ffffff/32.png");
+            iconsMap.set("133", "https://img.icons8.com/ios-filled/50/ffffff/33.png");
+            iconsMap.set("134", "https://img.icons8.com/ios-filled/50/ffffff/34.png");
+            iconsMap.set("135", "https://img.icons8.com/ios-filled/50/ffffff/35.png");
+            iconsMap.set("136", "https://img.icons8.com/ios-filled/50/ffffff/36.png");
+            iconsMap.set("137", "https://img.icons8.com/ios-filled/50/ffffff/37.png");
+            iconsMap.set("138", "https://img.icons8.com/ios-filled/50/ffffff/38.png");
+            iconsMap.set("139", "https://img.icons8.com/ios-filled/50/ffffff/39.png");
+            iconsMap.set("140", "https://img.icons8.com/ios-filled/50/ffffff/40.png");
+            iconsMap.set("141", "https://img.icons8.com/ios-filled/50/ffffff/41.png");
+            iconsMap.set("142", "https://img.icons8.com/ios-filled/50/ffffff/42.png");
+            iconsMap.set("143", "https://img.icons8.com/ios-filled/50/ffffff/43.png");
+            iconsMap.set("144", "https://img.icons8.com/ios-filled/50/ffffff/44.png");
+            iconsMap.set("145", "https://img.icons8.com/ios-filled/50/ffffff/45.png");
+            iconsMap.set("146", "https://img.icons8.com/ios-filled/50/ffffff/46.png");
+            iconsMap.set("147", "https://img.icons8.com/ios-filled/50/ffffff/47.png");
+            iconsMap.set("148", "https://img.icons8.com/ios-filled/50/ffffff/48.png");
+            iconsMap.set("149", "https://img.icons8.com/ios-filled/50/ffffff/49.png");
+            iconsMap.set("150", "https://img.icons8.com/ios-filled/50/ffffff/50.png");
+            iconsMap.set("151", "https://img.icons8.com/ios-filled/50/ffffff/51.png");
+            iconsMap.set("152", "https://img.icons8.com/ios-filled/50/ffffff/52.png");
+            iconsMap.set("153", "https://img.icons8.com/ios-filled/50/ffffff/53.png");
+            iconsMap.set("154", "https://img.icons8.com/ios-filled/50/ffffff/54.png");
+            iconsMap.set("155", "https://img.icons8.com/ios-filled/50/ffffff/55.png");
+            iconsMap.set("156", "https://img.icons8.com/ios-filled/50/ffffff/56.png");
+            iconsMap.set("157", "https://img.icons8.com/ios-filled/50/ffffff/57.png");
+            iconsMap.set("158", "https://img.icons8.com/ios-filled/50/ffffff/58.png");
+            iconsMap.set("159", "https://img.icons8.com/ios-filled/50/ffffff/59.png");
+            iconsMap.set("160", "https://img.icons8.com/ios-filled/50/ffffff/60.png");
+            iconsMap.set("161", "https://img.icons8.com/ios-filled/50/ffffff/61.png");
+            iconsMap.set("162", "https://img.icons8.com/ios-filled/50/ffffff/62.png");
+            iconsMap.set("163", "https://img.icons8.com/ios-filled/50/ffffff/63.png");
+            iconsMap.set("164", "https://img.icons8.com/ios-filled/50/ffffff/64.png");
+            iconsMap.set("165", "https://img.icons8.com/ios-filled/50/ffffff/65.png");
+            iconsMap.set("166", "https://img.icons8.com/ios-filled/50/ffffff/66.png");
+            iconsMap.set("167", "https://img.icons8.com/ios-filled/50/ffffff/67.png");
+            iconsMap.set("168", "https://img.icons8.com/ios-filled/50/ffffff/68.png");
+            iconsMap.set("169", "https://img.icons8.com/ios-filled/50/ffffff/69.png");
+            iconsMap.set("170", "https://img.icons8.com/ios-filled/50/ffffff/70.png");
+            iconsMap.set("171", "https://img.icons8.com/ios-filled/50/ffffff/71.png");
+            iconsMap.set("172", "https://img.icons8.com/ios-filled/50/ffffff/72.png");
+            iconsMap.set("173", "https://img.icons8.com/ios-filled/50/ffffff/73.png");
+            iconsMap.set("174", "https://img.icons8.com/ios-filled/50/ffffff/74.png");
+            iconsMap.set("175", "https://img.icons8.com/ios-filled/50/ffffff/75.png");
+            iconsMap.set("176", "https://img.icons8.com/ios-filled/50/ffffff/76.png");
+            iconsMap.set("177", "https://img.icons8.com/ios-filled/50/ffffff/77.png");
+            iconsMap.set("178", "https://img.icons8.com/ios-filled/50/ffffff/78.png");
+            iconsMap.set("179", "https://img.icons8.com/ios-filled/50/ffffff/79.png");
+            iconsMap.set("180", "https://img.icons8.com/ios-filled/50/ffffff/80.png");
+            iconsMap.set("181", "https://img.icons8.com/ios-filled/50/ffffff/81.png");
+            iconsMap.set("182", "https://img.icons8.com/ios-filled/50/ffffff/82.png");
+            iconsMap.set("183", "https://img.icons8.com/ios-filled/50/ffffff/83.png");
+            iconsMap.set("184", "https://img.icons8.com/ios-filled/50/ffffff/84.png");
+            iconsMap.set("185", "https://img.icons8.com/ios-filled/50/ffffff/85.png");
+            iconsMap.set("186", "https://img.icons8.com/ios-filled/50/ffffff/86.png");
+            iconsMap.set("187", "https://img.icons8.com/ios-filled/50/ffffff/87.png");
+            iconsMap.set("188", "https://img.icons8.com/ios-filled/50/ffffff/88.png");
+            iconsMap.set("189", "https://img.icons8.com/ios-filled/50/ffffff/89.png");
+            iconsMap.set("190", "https://img.icons8.com/ios-filled/50/ffffff/90.png");
+            iconsMap.set("191", "https://img.icons8.com/ios-filled/50/ffffff/91.png");
+            iconsMap.set("192", "https://img.icons8.com/ios-filled/50/ffffff/92.png");
+            iconsMap.set("193", "https://img.icons8.com/ios-filled/50/ffffff/93.png");
+            iconsMap.set("194", "https://img.icons8.com/ios-filled/50/ffffff/94.png");
+            iconsMap.set("195", "https://img.icons8.com/ios-filled/50/ffffff/95.png");
+            iconsMap.set("196", "https://img.icons8.com/ios-filled/50/ffffff/96.png");
+            iconsMap.set("197", "https://img.icons8.com/ios-filled/50/ffffff/97.png");
+            iconsMap.set("198", "https://img.icons8.com/ios-filled/50/ffffff/98.png");
+            iconsMap.set("199", "https://img.icons8.com/ios-filled/50/ffffff/99.png");
+            iconsMap.set("200", "https://img.icons8.com/ios-filled/50/ffffff/100.png");
 
+	let fullName: string;
+	let email: string;
+	let filiere: string;
 
-	let fullName:string;
-	let email:string;
-	let filiere:string;	
-
-const teamArray = [
+	// List of available teams
+	let teamArray = [
     "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
     "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
     "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
@@ -125,19 +256,41 @@ const teamArray = [
     "61", "62", "63", "64", "65", "66", "67", "68", "69", "70",
     "71", "72", "73", "74", "75", "76", "77", "78", "79", "80",
     "81", "82", "83", "84", "85", "86", "87", "88", "89", "90",
-    "91", "92", "93", "94", "95", "96", "97", "98", "99", "100"
+    "91", "92", "93", "94", "95", "96", "97", "98", "99", "100",
+    "101", "102", "103", "104", "105", "106", "107", "108", "109", "110",
+    "111", "112", "113", "114", "115", "116", "117", "118", "119", "120",
+    "121", "122", "123", "124", "125", "126", "127", "128", "129", "130",
+    "131", "132", "133", "134", "135", "136", "137", "138", "139", "140",
+    "141", "142", "143", "144", "145", "146", "147", "148", "149", "150",
+    "151", "152", "153", "154", "155", "156", "157", "158", "159", "160",
+    "161", "162", "163", "164", "165", "166", "167", "168", "169", "170",
+    "171", "172", "173", "174", "175", "176", "177", "178", "179", "180",
+    "181", "182", "183", "184", "185", "186", "187", "188", "189", "190",
+    "191", "192", "193", "194", "195", "196", "197", "198", "199", "200"
 ];
-	let team:string
-	let theme:string="crimson";
+	let team: string;
+	let theme: string = "crimson";
 
+	// Function to assign a random team and remove it from the available pool
 	const getRandomTeam = () => {
-		team = teamArray[Math.floor(Math.random() * teamArray.length)];
+		if (teamArray.length === 0) {
+			alert("No teams available!");
+			return;
+		}
+		// Randomly select a team from available teams
+		const randomIndex = Math.floor(Math.random() * teamArray.length);
+		team = teamArray[randomIndex];
+		teamArray.splice(randomIndex, 1); // Remove the selected team from the array
+
+		console.log(`Assigned team: ${team}`);
+		console.log(`Remaining teams: [${teamArray.join(", ")}]`);
 	};
 
-	let joinPromise:Promise<void>
+	let joinPromise: Promise<void>;
+
 	
-	function setTheme(t: string) {
-    switch (t) {
+    function setTheme(t:string) {
+	switch (t) {
         case "1":
             theme = "wintry";
             break;
@@ -438,28 +591,328 @@ const teamArray = [
         case "100":
             theme = "timeless";
             break;
+        case "101":
+            theme = "gossamer";
+            break;
+        case "102":
+            theme = "zephyr";
+            break;
+        case "103":
+            theme = "celadon";
+            break;
+        case "104":
+            theme = "sienna";
+            break;
+        case "105":
+            theme = "cerulean";
+            break;
+        case "106":
+            theme = "salmon";
+            break;
+        case "107":
+            theme = "lavish";
+            break;
+        case "108":
+            theme = "malachite";
+            break;
+        case "109":
+            theme = "coral";
+            break;
+        case "110":
+            theme = "violet";
+            break;
+        case "111":
+            theme = "fuchsia";
+            break;
+        case "112":
+            theme = "garnet";
+            break;
+        case "113":
+            theme = "vanilla";
+            break;
+        case "114":
+            theme = "citrine";
+            break;
+        case "115":
+            theme = "charcoal";
+            break;
+        case "116":
+            theme = "rose";
+            break;
+        case "117":
+            theme = "citrine";
+            break;
+        case "118":
+            theme = "palegreen";
+            break;
+        case "119":
+            theme = "stone";
+            break;
+        case "120":
+            theme = "peach";
+            break;
+        case "121":
+            theme = "clover";
+            break;
+        case "122":
+            theme = "ochre";
+            break;
+        case "123":
+            theme = "sunny";
+            break;
+        case "124":
+            theme = "slate";
+            break;
+        case "125":
+            theme = "shale";
+            break;
+        case "126":
+            theme = "dustyrose";
+            break;
+        case "127":
+            theme = "tawny";
+            break;
+        case "128":
+            theme = "smoky";
+            break;
+        case "129":
+            theme = "pewter";
+            break;
+        case "130":
+            theme = "earth";
+            break;
+        case "131":
+            theme = "chocolate";
+            break;
+        case "132":
+            theme = "floral";
+            break;
+        case "133":
+            theme = "mist";
+            break;
+        case "134":
+            theme = "canary";
+            break;
+        case "135":
+            theme = "berry";
+            break;
+        case "136":
+            theme = "granite";
+            break;
+        case "137":
+            theme = "dove";
+            break;
+        case "138":
+            theme = "sunsetrose";
+            break;
+        case "139":
+            theme = "cobblestone";
+            break;
+        case "140":
+            theme = "muddy";
+            break;
+        case "141":
+            theme = "mistletoe";
+            break;
+        case "142":
+            theme = "nightshade";
+            break;
+        case "143":
+            theme = "dragonfruit";
+            break;
+        case "144":
+            theme = "velvet";
+            break;
+        case "145":
+            theme = "aspen";
+            break;
+        case "146":
+            theme = "lily";
+            break;
+        case "147":
+            theme = "daffodil";
+            break;
+        case "148":
+            theme = "ginger";
+            break;
+        case "149":
+            theme = "tangerine";
+            break;
+        case "150":
+            theme = "amethyst";
+            break;
+        case "151":
+            theme = "tuscany";
+            break;
+        case "152":
+            theme = "platinum";
+            break;
+        case "153":
+            theme = "crimsonrose";
+            break;
+        case "154":
+            theme = "emeraldgreen";
+            break;
+        case "155":
+            theme = "antique";
+            break;
+        case "156":
+            theme = "celestialblue";
+            break;
+        case "157":
+            theme = "apricot";
+            break;
+        case "158":
+            theme = "safflower";
+            break;
+        case "159":
+            theme = "sapphireblue";
+            break;
+        case "160":
+            theme = "tulip";
+            break;
+        case "161":
+            theme = "mint";
+            break;
+        case "162":
+            theme = "chartreuse";
+            break;
+        case "163":
+            theme = "champagne";
+            break;
+        case "164":
+            theme = "apricotblush";
+            break;
+        case "165":
+            theme = "rainbow";
+            break;
+        case "166":
+            theme = "sunflower";
+            break;
+        case "167":
+            theme = "thistle";
+            break;
+        case "168":
+            theme = "cherryblossom";
+            break;
+        case "169":
+            theme = "cobweb";
+            break;
+        case "170":
+            theme = "jade";
+            break;
+        case "171":
+            theme = "orchid";
+            break;
+        case "172":
+            theme = "honeydew";
+            break;
+        case "173":
+            theme = "dahlia";
+            break;
+        case "174":
+            theme = "cerise";
+            break;
+        case "175":
+            theme = "heather";
+            break;
+        case "176":
+            theme = "woodrose";
+            break;
+        case "177":
+            theme = "brass";
+            break;
+        case "178":
+            theme = "fennel";
+            break;
+        case "179":
+            theme = "lichen";
+            break;
+        case "180":
+            theme = "rosemary";
+            break;
+        case "181":
+            theme = "sunlit";
+            break;
+        case "182":
+            theme = "thundra";
+            break;
+        case "183":
+            theme = "frostbite";
+            break;
+        case "184":
+            theme = "whippedcream";
+            break;
+        case "185":
+            theme = "cappuccino";
+            break;
+        case "186":
+            theme = "lavendula";
+            break;
+        case "187":
+            theme = "lavendermist";
+            break;
+        case "188":
+            theme = "camellia";
+            break;
+        case "189":
+            theme = "cinnamon";
+            break;
+        case "190":
+            theme = "mauve";
+            break;
+        case "191":
+            theme = "firefly";
+            break;
+        case "192":
+            theme = "bubblegum";
+            break;
+        case "193":
+            theme = "sugarplum";
+            break;
+        case "194":
+            theme = "fairy";
+            break;
+        case "195":
+            theme = "mermaid";
+            break;
+        case "196":
+            theme = "galaxy";
+            break;
+        case "197":
+            theme = "twilight";
+            break;
+        case "198":
+            theme = "caterpillar";
+            break;
+        case "199":
+            theme = "peacock";
+            break;
+        case "200":
+            theme = "marble";
+            break;
         default:
             theme = "wintry";
     }
 }
 	let seconds = 5;
 	async function join() {
-		if(!fullName || !email || !filiere) return
-		if(filiere === "0") return alert("Please select your major");
+		if (!fullName || !email || !filiere) return;
+		if (filiere === "0") return alert("Please select your major");
+
 		try {
-			joinPromise = axios.post("https://api.itech-club.com/join", {fullName, email, filiere, team});
+			joinPromise = axios.post("https://api.itech-club.com/join", { fullName, email, filiere, team });
 			const res = await joinPromise;
 			if (res.status === 200) {
 				thanksSwitch = true;
 				localStorage.setItem("joined", "true");
 				for (let i = 0; i < 5; i++) {
-					await new Promise(r => setTimeout(r, 1000));
+					await new Promise((r) => setTimeout(r, 1000));
 					seconds--;
 					if (seconds === 0) {
 						window.location.replace("https://chat.whatsapp.com/GVfvRuq9AIpJema4dMgPCT");
 					}
 				}
-				//new Promise(r => setTimeout(r, 5000)).then(() => window.location.replace("https://chat.whatsapp.com/GVfvRuq9AIpJema4dMgPCT"));
 			}
 		} catch (error) {
 			if (error.response.status === 402) {
@@ -467,46 +920,36 @@ const teamArray = [
 				localStorage.setItem("joined", "true");
 			}
 		}
-		// const res = await axios.post("http://localhost:8000/join", {fullName, email, filiere, team});
-		// if (res.status === 200) {
-		// 	thanksSwitch = true;
-		// 	localStorage.setItem("joined", "true");
-		// 	new Promise(r => setTimeout(r, 6000)).then(() => window.open("https://chat.whatsapp.com/GVfvRuq9AIpJema4dMgPCT"));
-		// }
 	}
 
-	let randomIcon:string = "https://img.icons8.com/ios/50/000000/launched-rocket.png"
+	let randomIcon: string = "https://img.icons8.com/ios/50/000000/launched-rocket.png";
 	async function iconRandomizer() {
 		for (let i = 0; i < 100; i++) {
 			const thisTeam = teamArray[Math.floor(Math.random() * teamArray.length)];
-			await new Promise(r => setTimeout(r, 65));
-			team = thisTeam
-			setTheme(thisTeam)
+			await new Promise((r) => setTimeout(r, 65));
+			team = thisTeam;
+			setTheme(thisTeam);
 			randomIcon = iconsMap.get(thisTeam);
 		}
-		await new Promise(r => setTimeout(r, 600));
-		randomIcon = ""	
+		await new Promise((r) => setTimeout(r, 600));
+		randomIcon = "";
 	}
 
 	async function setCookies() {
 		document.cookie = "team=" + team + "; max-age=31536000;";
 	}
-	
-	
-	
-	
+
 	onMount(async () => {
 		if (document.cookie.includes("team")) {
-			localStorage.getItem("joined")=="true" ? joinedSwitch = true : joinedSwitch = false;
+			localStorage.getItem("joined") == "true" ? (joinedSwitch = true) : (joinedSwitch = false);
 			team = document.cookie.split("team=")[1].split(";")[0];
-			randomIcon=""
-			setTheme(team)
+			randomIcon = "";
+			setTheme(team);
 		} else {
-			await iconRandomizer()
-			await setCookies()
+			await iconRandomizer();
+			await setCookies();
 		}
-	})
-
+	});
 </script>
 
 <style>
@@ -622,15 +1065,18 @@ const teamArray = [
 					
 					<select class="select" required bind:value={filiere}>
 						<option value="0" disabled selected>Select your Major</option>
-						<option value="1">Master IT</option>
+						<option value="1">Master TI</option>
 						<option value="2">Master IDMS</option>
-						<option value="9">Master BD</option>
-						<option value="3">Génie IAGI</option>
-						<option value="4">Génie MI</option>
-						<option value="6">Génie MSEI</option>
-						<option value="7">Genie Industriel</option>
+						<option value="3">Master BD</option>
+                        <option value="4">Génie SMIndustriel</option>
+						<option value="5">Génie IAGI</option>
+						<option value="6">Génie MI</option>
+						<option value="7">Génie MSEI</option>
+                        <option value="8">Master CyberCloudC</option>
+						<option value="9">Genie SIndustriel</option>
 						<option value="10">Génie EM</option>
-						<option value="8">Cycle préparatoire</option>
+                        <option value="11">Génie MAAéronautique</option>
+						<option value="12">Cycle préparatoire</option>
 					</select>
 						
 
